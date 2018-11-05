@@ -66,6 +66,7 @@ namespace TokenManager
 
         private void UpdateRemoveList()
         {
+            comboBoxRemoveProvider.Items.Clear();
             foreach (string providerName in Model.GetProviderNames())
             {
                 comboBoxRemoveProvider.Items.Add(providerName);
@@ -83,6 +84,7 @@ namespace TokenManager
         private void buttonAddProvider_Click(object sender, EventArgs e)
         {
             Model.AddProvider(ProviderNameToAdd);
+            comboBoxRemoveProvider.Items.Add(ProviderNameToAdd);
             textBoxAddProvider.Text = "";
         }
 
