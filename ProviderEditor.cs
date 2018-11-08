@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace TokenManager
@@ -25,6 +27,7 @@ namespace TokenManager
         {
             try
             {
+                FormatTokens();
                 TokenManagerHotkeys.Register(Name, Model.GetProviderHotKeys(Name), InsertToken);
                 Model.SetProviderEnabled(Name, checkBoxEnableHotKeys.Checked);
                 Model.SetProviderHotKeys(Name, (Keys)textBoxHotKeys.Tag);
@@ -79,6 +82,19 @@ namespace TokenManager
             }
         }
 
+        private void FormatTokens()
+        {
+            StringBuilder result = new StringBuilder("");
+            foreach (string token in TokenRegex.Split(textBoxAccessTokens.Text))
+            {
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    result.AppendLine(token.Trim());
+                }
+            }
+            textBoxAccessTokens.Text = result.ToString().Trim();
+        }
+
         private void ShowNoTokensError()
         {
             Program.ApplicationContext.Alert(
@@ -107,5 +123,7 @@ namespace TokenManager
             ////    textBoxHotKeys.Text = e.KeyData.ToDisplayString();
             ////}
         }
+
+        private readonly Regex TokenRegex = new Regex(@"[^A-Za-z0-9 ]");
     }
 }
