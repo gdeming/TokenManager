@@ -73,6 +73,7 @@ namespace TokenManager
                     Model.Save();
                     SendKeys.Send(token);
                     Clipboard.SetText(token);
+                    ShowTokenCopy(Name, token);
                     CheckForLowTokenCount();
                 }
                 else
@@ -93,6 +94,14 @@ namespace TokenManager
                 }
             }
             textBoxAccessTokens.Text = result.ToString().Trim();
+        }
+
+        private void ShowTokenCopy(string provider, string token)
+        {
+            Program.ApplicationContext.Alert(
+                title: "Token Manager",
+                text: provider + " token: " + token + "\r\nCopied to the clipboard",
+                alertType: TokenManagerApplicationContext.AlertType.Info);
         }
 
         private void ShowNoTokensError()
