@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace TokenManager
 {
@@ -12,14 +13,30 @@ namespace TokenManager
     {
         public TokenManagerModel()
         {
-            SettingsStore = LoadSettingsState();
-            ProviderStore = LoadProviderState();
+            if (Plaintext)
+            {
+                SettingsStore = LoadPlaintext<SettingsData>(SettingStoreFilePath);
+                ProviderStore = LoadPlaintext<Dictionary<string, ProviderData>>(ProviderStoreFilePath);
+            }
+            else
+            {
+                SettingsStore = LoadEncrypted<SettingsData>(SettingStoreFilePath);
+                ProviderStore = LoadEncrypted<Dictionary<string, ProviderData>>(ProviderStoreFilePath);
+            }
         }
 
         public void Save()
         {
-            SaveSettingsState(SettingsStore);
-            SaveProviderState(ProviderStore);
+            if (Plaintext)
+            {
+                SavePlaintext(SettingsStore, SettingStoreFilePath);
+                SavePlaintext(ProviderStore, ProviderStoreFilePath);
+            }
+            else
+            {
+                SaveEncrypted(SettingsStore, SettingStoreFilePath);
+                SaveEncrypted(ProviderStore, ProviderStoreFilePath);
+            }
         }
 
         public bool GetSettingsEnabled()
@@ -27,7 +44,7 @@ namespace TokenManager
             return SettingsStore.Enabled;
         }
 
-        public void  SetSettingsEnabled(bool enabled)
+        public void SetSettingsEnabled(bool enabled)
         {
             SettingsStore.Enabled = enabled;
         }
@@ -171,64 +188,72 @@ namespace TokenManager
 
         private Dictionary<string, ProviderData> ProviderStore { get; }
 
-        private static void SaveSettingsState(SettingsData settingsStore)
+        private static T LoadPlaintext<T>(string filePath) where T : class, new()
         {
-            string json = JsonConvert.SerializeObject(settingsStore, Formatting.Indented);
-            Directory.CreateDirectory(SettingsPathName);
-            File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
-        }
-
-        private static SettingsData LoadSettingsState()
-        {
-            SettingsData result = null;
+            T result = null;
             try
             {
-                if (File.Exists(SettingsFilePath))
+                if (File.Exists(filePath))
                 {
-                    string json = File.ReadAllText(SettingsFilePath);
-                    result = JsonConvert.DeserializeObject<SettingsData>(json);
+                    string json = File.ReadAllText(filePath);
+                    result = JsonConvert.DeserializeObject<T>(json);
                 }
             }
-            catch
+            catch (Exception)
             {
-                MessageBox.Show("Unable to parse settings file: \r\n    " + SettingsFilePath, "Token Manager");
-                File.Move(SettingsFilePath, SettingsFilePath + "." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+                MessageBox.Show("Unable to load file: \r\n    " + filePath, nameof(TokenManager));
+                File.Move(filePath, filePath + "." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
             }
-            return result ?? new SettingsData();
+            return result ?? new T();
         }
 
-        private static void SaveProviderState(Dictionary<string, ProviderData>providerStore)
+        private static void SavePlaintext<T>(T obj, string filePath)
         {
-            string json = JsonConvert.SerializeObject(providerStore, Formatting.Indented);
-            Directory.CreateDirectory(TokensPathName);
-            File.WriteAllText(TokensFilePath, json, Encoding.UTF8);
+            string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            File.WriteAllText(filePath, json, Encoding.UTF8);
         }
 
-        private static Dictionary<string, ProviderData> LoadProviderState()
+        private static T LoadEncrypted<T>(string filePath) where T : class, new()
         {
-            Dictionary<string, ProviderData> result = null;
+            T result = null;
             try
             {
-                if (File.Exists(TokensFilePath))
+                if (File.Exists(filePath))
                 {
-                    string json = File.ReadAllText(TokensFilePath);
-                    result = JsonConvert.DeserializeObject<Dictionary<string, ProviderData>>(json);
+                    string encryptedString = File.ReadAllText(filePath);
+                    byte[] encryptedBytes = Convert.FromBase64String(encryptedString);
+                    byte[] unencryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
+                    string unencryptedString = Encoding.UTF8.GetString(unencryptedBytes);
+                    result = JsonConvert.DeserializeObject<T>(unencryptedString);
                 }
             }
-            catch
+            catch (Exception)
             {
-                MessageBox.Show("Unable to parse tokens file: \r\n    " + TokensFilePath, "Token Manager");
-                File.Move(TokensFilePath, TokensFilePath + "." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+                MessageBox.Show("Unable to load file: \r\n    " + filePath, nameof(TokenManager));
+                File.Move(filePath, filePath + "." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
             }
-            return result ?? new Dictionary<string, ProviderData>();
+            return result ?? new T();
         }
 
-        private static readonly string SettingsFileName = "TokenManager.settings";
-        private static readonly string SettingsPathName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TokenManager");
-        private static readonly string SettingsFilePath = Path.Combine(SettingsPathName, SettingsFileName);
+        private static void SaveEncrypted<T>(T obj, string filePath)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            string unencryptedString = JsonConvert.SerializeObject(obj);
+            byte[] unencryptedBytes = Encoding.UTF8.GetBytes(unencryptedString);
+            byte[] encryptedBytes = ProtectedData.Protect(unencryptedBytes, null, DataProtectionScope.CurrentUser);
+            string encryptedString = Convert.ToBase64String(encryptedBytes);
+            File.WriteAllText(filePath, encryptedString, Encoding.UTF8);
+        }
 
-        private static readonly string TokensFileName = "TokenManager.tokens";
-        private static readonly string TokensPathName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TokenManager");
-        private static readonly string TokensFilePath = Path.Combine(TokensPathName, TokensFileName);
+        private static readonly string SettingStoreFileName = "TokenManager.settings";
+        private static readonly string SettingStorePathName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), nameof(TokenManager));
+        private static readonly string SettingStoreFilePath = Path.Combine(SettingStorePathName, SettingStoreFileName);
+
+        private static readonly string ProviderStoreFileName = "TokenManager.tokens";
+        private static readonly string ProviderStorePathName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), nameof(TokenManager));
+        private static readonly string ProviderStoreFilePath = Path.Combine(ProviderStorePathName, ProviderStoreFileName);
+
+        private const bool Plaintext = false;
     }
 }
