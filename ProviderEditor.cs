@@ -33,7 +33,7 @@ namespace TokenManager
                 Model.SetProviderHotKeys(Name, (Keys)textBoxHotKeys.Tag);
                 Model.SetProviderTokens(Name, textBoxAccessTokens.Text.ToTokens());
             }
-            catch
+            catch (Exception)
             {
                 Program.ApplicationContext.Alert(
                     title: "Token Manager",
@@ -120,17 +120,9 @@ namespace TokenManager
             e.Handled = true;
         }
 
-        private void textBoxHotKeys_KeyUp(object sender, KeyEventArgs e)
+        private void textBoxAccessTokens_TextPasted(object sender, EventArgs e)
         {
-            ////if ((e.KeyData ^ (Keys)textBoxHotKeys.Tag) == Keys.None)
-            ////{
-            ////    textBoxHotKeys.Tag = Keys.None;
-            ////    textBoxHotKeys.Text = e.KeyData.ToDisplayString();
-            ////}
-            ////else
-            ////{
-            ////    textBoxHotKeys.Text = e.KeyData.ToDisplayString();
-            ////}
+            FormatTokens();
         }
 
         private readonly Regex TokenRegex = new Regex(@"[^A-Za-z0-9 ]");

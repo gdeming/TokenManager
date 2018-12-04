@@ -108,6 +108,9 @@
     <Compile Include="SettingsEditor.Designer.cs">
       <DependentUpon>SettingsEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProviderTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="TokenManagerMainForm.resx">
       <DependentUpon>TokenManagerMainForm.cs</DependentUpon>
       <SubType>Designer</SubType>

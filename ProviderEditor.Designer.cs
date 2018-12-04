@@ -32,7 +32,7 @@
             this.textBoxHotKeys = new System.Windows.Forms.TextBox();
             this.checkBoxEnableHotKeys = new System.Windows.Forms.CheckBox();
             this.groupBoxAccessTokens = new System.Windows.Forms.GroupBox();
-            this.textBoxAccessTokens = new System.Windows.Forms.TextBox();
+            this.textBoxAccessTokens = new TokenManager.ProviderTextBox();
             this.groupBoxHotKeys.SuspendLayout();
             this.groupBoxAccessTokens.SuspendLayout();
             this.SuspendLayout();
@@ -61,7 +61,6 @@
             this.textBoxHotKeys.TabIndex = 1;
             this.textBoxHotKeys.WordWrap = false;
             this.textBoxHotKeys.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxHotKeys_KeyDown);
-            this.textBoxHotKeys.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxHotKeys_KeyUp);
             // 
             // checkBoxEnableHotKeys
             // 
@@ -90,13 +89,13 @@
             // 
             // textBoxAccessTokens
             // 
-            this.textBoxAccessTokens.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxAccessTokens.Location = new System.Drawing.Point(3, 16);
+            this.textBoxAccessTokens.Location = new System.Drawing.Point(7, 16);
             this.textBoxAccessTokens.Multiline = true;
             this.textBoxAccessTokens.Name = "textBoxAccessTokens";
             this.textBoxAccessTokens.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxAccessTokens.Size = new System.Drawing.Size(260, 267);
+            this.textBoxAccessTokens.Size = new System.Drawing.Size(251, 242);
             this.textBoxAccessTokens.TabIndex = 0;
+            this.textBoxAccessTokens.TextPasted += textBoxAccessTokens_TextPasted;
             // 
             // ProviderEditor
             // 
@@ -118,6 +117,6 @@
         private System.Windows.Forms.TextBox textBoxHotKeys;
         private System.Windows.Forms.CheckBox checkBoxEnableHotKeys;
         private System.Windows.Forms.GroupBox groupBoxAccessTokens;
-        private System.Windows.Forms.TextBox textBoxAccessTokens;
+        private TokenManager.ProviderTextBox textBoxAccessTokens;
     }
 }
