@@ -80,6 +80,7 @@ namespace TokenManager
                 {
                     ShowNoTokensError();
                 }
+                e.Handled = true;
             }
         }
 

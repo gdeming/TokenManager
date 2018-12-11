@@ -78,6 +78,7 @@ namespace TokenManager
             if (Model.GetSettingsEnabled())
             {
                 Program.ApplicationContext.Show();
+                e.Handled = true;
             }
         }
 

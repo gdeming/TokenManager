@@ -46,7 +46,9 @@ namespace TokenManager
 
         private static void HotkeyHandler(object sender, HotkeyEventArgs e)
         {
-            RegisteredHotkeys[e.Name].Handler?.Invoke(sender, e);
+            TokenManagerHotkeysEventArgs eventArgs = e;
+            RegisteredHotkeys[eventArgs.Name].Handler?.Invoke(sender, eventArgs);
+            e.Handled = eventArgs.Handled;
         }
 
         private static readonly Dictionary<string, HotkeysData> RegisteredHotkeys = new Dictionary<string, HotkeysData>();
