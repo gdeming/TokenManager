@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -31,6 +32,7 @@ namespace TokenManager
                 TokenManagerHotkeys.Register(Name, Model.GetProviderHotKeys(Name), InsertToken);
                 Model.SetProviderEnabled(Name, checkBoxEnableHotKeys.Checked);
                 Model.SetProviderHotKeys(Name, (Keys)textBoxHotKeys.Tag);
+                Model.SetProviderUrl(Name, textBoxProviderUrl.Text);
                 Model.SetProviderTokens(Name, textBoxAccessTokens.Text.ToTokens());
             }
             catch (Exception)
@@ -48,6 +50,7 @@ namespace TokenManager
             checkBoxEnableHotKeys.Checked = Model.GetProviderEnabled(Name);
             textBoxHotKeys.Text = hotKeys.ToDisplayString();
             textBoxHotKeys.Tag = hotKeys;
+            textBoxProviderUrl.Text = Model.GetProviderUrl(Name);
             textBoxAccessTokens.Text = string.Join("\r\n", Model.GetProviderTokens(Name));
         }
 
@@ -57,8 +60,9 @@ namespace TokenManager
             {
                 Program.ApplicationContext.Alert(
                     title: "Token Manager",
-                    text: Model.TokenCount(Name).ToString() + " token(s) remaining for provider:" + Text,
-                    alertType: TokenManagerApplicationContext.AlertType.Warning);
+                    text: $"{Model.TokenCount(Name)} token(s) remaining for provider: {Text}",
+                    alertType: TokenManagerApplicationContext.AlertType.Warning,
+                    timeout: int.MaxValue);
             }
         }
 
@@ -99,17 +103,20 @@ namespace TokenManager
 
         private void ShowTokenCopy(string provider, string token)
         {
-            Program.ApplicationContext.Alert(
-                title: "Token Manager",
-                text: provider + " token: " + token + "\r\nCopied to the clipboard",
-                alertType: TokenManagerApplicationContext.AlertType.Info);
+            if (Model.GetTokenAccessNotificationsEnabled())
+            {
+                Program.ApplicationContext.Alert(
+                  title: "Token Manager",
+                  text: $"{provider} token: {token}\r\nCopied to the clipboard",
+                  alertType: TokenManagerApplicationContext.AlertType.Info);
+            }
         }
 
         private void ShowNoTokensError()
         {
             Program.ApplicationContext.Alert(
                 title: "Token Manager",
-                text: "No tokens remaining for provider:" + Text,
+                text: $"No tokens remaining for provider: {Text}",
                 alertType: TokenManagerApplicationContext.AlertType.Error);
         }
 
@@ -119,6 +126,11 @@ namespace TokenManager
             textBoxHotKeys.Text = e.KeyData.ToDisplayString();
             e.SuppressKeyPress = true;
             e.Handled = true;
+        }
+        
+        private void buttonProviderUrl_Click(object sender, EventArgs e)
+        {
+            Process.Start(textBoxProviderUrl.Text);
         }
 
         private void textBoxAccessTokens_TextPasted(object sender, EventArgs e)

@@ -33,7 +33,7 @@ namespace TokenManager
             _trayIcon.BalloonTipClicked += ShowHandler;
         }
 
-        public void Alert(string title = "", string text = "", AlertType alertType = AlertType.None, int timeout = 5000)
+        public void Alert(string title = "", string text = "", AlertType alertType = AlertType.None, int timeout = 3000)
         {
             _trayIcon.BalloonTipIcon = AlertIcon[alertType];
             _trayIcon.BalloonTipText = text;

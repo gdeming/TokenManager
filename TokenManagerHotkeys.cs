@@ -22,7 +22,7 @@ namespace TokenManager
             }
             catch (Exception)
             {
-                Program.ApplicationContext.Alert("TokenManager", "Unable to register hotkey.", TokenManagerApplicationContext.AlertType.Error);
+                Program.ApplicationContext.Alert("TokenManager", "Unable to register hotkey", TokenManagerApplicationContext.AlertType.Error);
             }
         }
 
@@ -35,7 +35,7 @@ namespace TokenManager
             }
             catch (Exception)
             {
-                Program.ApplicationContext.Alert("TokenManager", "Unable to unregister hotkey.", TokenManagerApplicationContext.AlertType.Error);
+                Program.ApplicationContext.Alert("TokenManager", "Unable to unregister hotkey", TokenManagerApplicationContext.AlertType.Error);
             }
         }
 

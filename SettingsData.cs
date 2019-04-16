@@ -15,6 +15,8 @@ namespace TokenManager
 
         public Keys HotKeys { get; set; }
 
+        public bool TokenAccessNotificationsEnabled { get; set; }
+
         public int WarnAt { get; set; }
 
         private const int DefaultWarnAt = 3;

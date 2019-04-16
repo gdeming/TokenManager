@@ -32,9 +32,10 @@ namespace TokenManager
         {
             try
             {
-                TokenManagerHotkeys.Register(Name, Model.GetSettingsHotKeys(), ShowForm);
+                TokenManagerHotkeys.Register(Name, Model.GetSettingsHotKeys(), SettingsHotKey_Pressed);
                 Model.SetSettingsEnabled(checkBoxEnable.Checked);
                 Model.SetSettingsHotKeys((Keys)textBoxHotKeys.Tag);
+                Model.SetTokenAccessNotificationsEnabled(checkBoxEnableTokenNotifications.Checked);
                 Model.SetSettingsWarnAt((int)numericUpDownWarnAt.Value);
             }
             catch
@@ -49,9 +50,12 @@ namespace TokenManager
 
         public override void RevertChanges()
         {
+            checkBoxEnable.Checked = Model.GetSettingsEnabled();
             Keys hotKeys = Model.GetSettingsHotKeys();
             textBoxHotKeys.Tag = hotKeys;
             textBoxHotKeys.Text = hotKeys.ToDisplayString();
+            checkBoxEnableTokenNotifications.Checked = Model.GetTokenAccessNotificationsEnabled();
+            numericUpDownWarnAt.Value = Model.GetSettingsWarnAt();
         }
 
         private void UpdateAddButtonState()
@@ -73,7 +77,7 @@ namespace TokenManager
             }
         }
 
-        private void ShowForm(object sender, TokenManagerHotkeysEventArgs e)
+        private void SettingsHotKey_Pressed(object sender, TokenManagerHotkeysEventArgs e)
         {
             if (Model.GetSettingsEnabled())
             {

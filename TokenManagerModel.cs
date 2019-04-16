@@ -59,6 +59,16 @@ namespace TokenManager
             SettingsStore.HotKeys = hotKeys;
         }
 
+        public bool GetTokenAccessNotificationsEnabled()
+        {
+            return SettingsStore.TokenAccessNotificationsEnabled;
+        }
+
+        public void SetTokenAccessNotificationsEnabled(bool enabled)
+        {
+            SettingsStore.TokenAccessNotificationsEnabled = enabled;
+        }
+
         public int GetSettingsWarnAt()
         {
             return SettingsStore.WarnAt;
@@ -146,6 +156,24 @@ namespace TokenManager
             if (HasProvider(name))
             {
                 ProviderStore[name].HotKeys = hotKeysData;
+            }
+        }
+
+        public string GetProviderUrl(string name)
+        {
+            string result = "";
+            if (HasProvider(name))
+            {
+                result = ProviderStore[name].ProviderUrl;
+            }
+            return result;
+        }
+
+        public void SetProviderUrl(string name, string url)
+        {
+            if (HasProvider(name))
+            {
+                ProviderStore[name].ProviderUrl = url;
             }
         }
 

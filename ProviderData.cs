@@ -10,6 +10,7 @@ namespace TokenManager
             Name = name;
             Enabled = true;
             HotKeys = Keys.None;
+            ProviderUrl = "";
             Tokens = new List<string>();
         }
 
@@ -18,6 +19,8 @@ namespace TokenManager
         public bool Enabled { get; set; }
 
         public Keys HotKeys { get; set; }
+
+        public string ProviderUrl { get; set; }
 
         public List<string> Tokens { get;  }
 
