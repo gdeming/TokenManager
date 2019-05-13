@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using BaseClass = TokenManager.TokenManagerEditor;
+////using BaseClass = System.Windows.Forms.UserControl;
+
 namespace TokenManager
 {
-    internal sealed partial class SettingsEditor : TokenManagerEditor
+    internal sealed partial class SettingsEditor : BaseClass
     {
         public SettingsEditor(TokenManagerModel model, string name) : base(model)
         {

@@ -93,7 +93,8 @@
             // 
             // textBoxAccessTokens
             // 
-            this.textBoxAccessTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxAccessTokens.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxAccessTokens.Location = new System.Drawing.Point(8, 16);
             this.textBoxAccessTokens.Multiline = true;
@@ -125,6 +126,7 @@
             this.textBoxProviderUrl.Size = new System.Drawing.Size(232, 20);
             this.textBoxProviderUrl.TabIndex = 5;
             this.textBoxProviderUrl.WordWrap = false;
+            this.textBoxProviderUrl.TextChanged += new System.EventHandler(this.textBoxProviderUrl_TextChanged);
             // 
             // buttonProviderUrl
             // 

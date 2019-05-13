@@ -4,9 +4,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+using BaseClass = TokenManager.TokenManagerEditor;
+////using BaseClass = System.Windows.Forms.UserControl;
+
 namespace TokenManager
 {
-    internal sealed partial class ProviderEditor : TokenManagerEditor
+    internal sealed partial class ProviderEditor : BaseClass
     {
         public ProviderEditor(TokenManagerModel model, string name) : base(model)
         {
@@ -15,6 +18,7 @@ namespace TokenManager
             Text = Name;
             RevertChanges();
             AcceptChanges();
+            UpdateProviderUrlButtonState();
             Disposed += LocalDispose;
         }
 
@@ -52,6 +56,11 @@ namespace TokenManager
             textBoxHotKeys.Tag = hotKeys;
             textBoxProviderUrl.Text = Model.GetProviderUrl(Name);
             textBoxAccessTokens.Text = string.Join("\r\n", Model.GetProviderTokens(Name));
+        }
+
+        private void UpdateProviderUrlButtonState()
+        {
+            buttonProviderUrl.Enabled = (Uri.IsWellFormedUriString(textBoxProviderUrl.Text, UriKind.Absolute));
         }
 
         private void CheckForLowTokenCount()
@@ -128,9 +137,24 @@ namespace TokenManager
             e.Handled = true;
         }
         
+        private void textBoxProviderUrl_TextChanged(object sender, EventArgs e)
+        {
+            UpdateProviderUrlButtonState();
+        }
+
         private void buttonProviderUrl_Click(object sender, EventArgs e)
         {
-            Process.Start(textBoxProviderUrl.Text);
+            try
+            {
+                Process.Start(textBoxProviderUrl.Text);
+            }
+            catch
+            {
+                Program.ApplicationContext.Alert(
+                    title: "Token Manager",
+                    text: $"Unable to navigate to URL: \"{textBoxProviderUrl.Text}\"",
+                    alertType: TokenManagerApplicationContext.AlertType.Error);
+            }
         }
 
         private void textBoxAccessTokens_TextPasted(object sender, EventArgs e)
