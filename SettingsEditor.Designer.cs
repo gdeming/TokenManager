@@ -198,7 +198,7 @@
             // labelWarnAtPostfix
             // 
             this.labelWarnAtPostfix.AutoSize = true;
-            this.labelWarnAtPostfix.Location = new System.Drawing.Point(176, 44);
+            this.labelWarnAtPostfix.Location = new System.Drawing.Point(110, 44);
             this.labelWarnAtPostfix.Name = "labelWarnAtPostfix";
             this.labelWarnAtPostfix.Size = new System.Drawing.Size(87, 13);
             this.labelWarnAtPostfix.TabIndex = 14;
@@ -206,7 +206,7 @@
             // 
             // numericUpDownWarnAt
             // 
-            this.numericUpDownWarnAt.Location = new System.Drawing.Point(117, 41);
+            this.numericUpDownWarnAt.Location = new System.Drawing.Point(50, 41);
             this.numericUpDownWarnAt.Name = "numericUpDownWarnAt";
             this.numericUpDownWarnAt.Size = new System.Drawing.Size(56, 20);
             this.numericUpDownWarnAt.TabIndex = 13;

@@ -11,6 +11,8 @@ namespace TokenManager
         public SettingsEditor(TokenManagerModel model, string name) : base(model)
         {
             InitializeComponent();
+            numericUpDownWarnAt.Left = labelWarnAtPrefix.Right;
+            labelWarnAtPostfix.Left = numericUpDownWarnAt.Right;
             Name = name;
             Text = name;
             RevertChanges();
