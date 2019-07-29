@@ -102,6 +102,7 @@
             this.textBoxAccessTokens.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxAccessTokens.Size = new System.Drawing.Size(250, 208);
             this.textBoxAccessTokens.TabIndex = 8;
+            this.textBoxAccessTokens.TextPasted += textBoxAccessTokens_TextPasted;
             // 
             // groupBoxProviderUrl
             // 

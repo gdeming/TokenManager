@@ -161,6 +161,8 @@
             // 
             // groupBoxNotifications
             // 
+            this.groupBoxNotifications.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxNotifications.Controls.Add(this.checkBoxEnableTokenNotifications);
             this.groupBoxNotifications.Controls.Add(this.labelWarnAtPrefix);
             this.groupBoxNotifications.Controls.Add(this.labelWarnAtPostfix);

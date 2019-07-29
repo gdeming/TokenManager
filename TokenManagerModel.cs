@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace TokenManager
 {
@@ -274,6 +274,8 @@ namespace TokenManager
             File.WriteAllText(filePath, encryptedString, Encoding.UTF8);
         }
 
+        private static readonly bool Plaintext = Settings.Default.Plaintext;
+
         private static readonly string SettingStoreFileName = "TokenManager.settings";
         private static readonly string SettingStorePathName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), nameof(TokenManager));
         private static readonly string SettingStoreFilePath = Path.Combine(SettingStorePathName, SettingStoreFileName);
@@ -281,7 +283,5 @@ namespace TokenManager
         private static readonly string ProviderStoreFileName = "TokenManager.tokens";
         private static readonly string ProviderStorePathName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), nameof(TokenManager));
         private static readonly string ProviderStoreFilePath = Path.Combine(ProviderStorePathName, ProviderStoreFileName);
-
-        private const bool Plaintext = false;
     }
 }

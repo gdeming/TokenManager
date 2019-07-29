@@ -16,8 +16,8 @@ namespace TokenManager
                 Unregister(name);
                 if (hotkeys != Keys.None)
                 {
-                    RegisteredHotkeys.Add(name, new HotkeysData(name, hotkeys, handler));
                     HotkeyManager.Current.AddOrReplace(name, hotkeys, true, HotkeyHandler);
+                    RegisteredHotkeys.Add(name, new HotkeysData(name, hotkeys, handler));
                 }
             }
             catch (Exception)
@@ -30,8 +30,11 @@ namespace TokenManager
         {
             try
             {
-                HotkeyManager.Current.Remove(name);
-                RegisteredHotkeys.Remove(name);
+                if (IsRegistered(name))
+                {
+                    RegisteredHotkeys.Remove(name);
+                    HotkeyManager.Current.Remove(name);
+                }
             }
             catch (Exception)
             {
@@ -46,9 +49,12 @@ namespace TokenManager
 
         private static void HotkeyHandler(object sender, HotkeyEventArgs e)
         {
-            TokenManagerHotkeysEventArgs eventArgs = e;
-            RegisteredHotkeys[eventArgs.Name].Handler?.Invoke(sender, eventArgs);
-            e.Handled = eventArgs.Handled;
+            if (IsRegistered(e.Name))
+            {
+                TokenManagerHotkeysEventArgs eventArgs = e;
+                RegisteredHotkeys[eventArgs.Name].Handler?.Invoke(sender, eventArgs);
+                e.Handled = eventArgs.Handled;
+            }
         }
 
         private static readonly Dictionary<string, HotkeysData> RegisteredHotkeys = new Dictionary<string, HotkeysData>();
